@@ -19,12 +19,16 @@ form?.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity()
 form?.addEventListener('input',()=>{document.querySelector('#message-preview').hidden=true});
 const learningRoadmap=document.querySelector('.learning-roadmap');
 if(learningRoadmap){
+  const roadmapPath=learningRoadmap.querySelector('.learning-roadmap-path');
+  const pathLength=roadmapPath.getTotalLength();
+  roadmapPath.style.strokeDasharray=String(pathLength);
+  roadmapPath.style.strokeDashoffset=String(pathLength);
   let roadmapFrame=0;
   const updateRoadmap=()=>{
     roadmapFrame=0;
     const rect=learningRoadmap.getBoundingClientRect();
     const progress=Math.max(0,Math.min(1,(innerHeight*.62-rect.top)/rect.height));
-    learningRoadmap.style.setProperty('--roadmap-draw',`${Math.round(progress*100)}%`);
+    roadmapPath.style.strokeDashoffset=String(pathLength*(1-progress));
   };
   const scheduleRoadmap=()=>{if(!roadmapFrame)roadmapFrame=requestAnimationFrame(updateRoadmap)};
   addEventListener('scroll',scheduleRoadmap,{passive:true});
