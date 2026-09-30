@@ -17,3 +17,17 @@ document.querySelectorAll('video').forEach(video=>video.addEventListener('play',
 const form=document.querySelector('#contact-form');
 form?.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const data=new FormData(form);const message=`Bonjour Les Génies du Calcul Mental,\n\nJe m’appelle ${String(data.get('parent')).trim()}.\nÂge de mon enfant : ${data.get('age')}.\nObjet : ${data.get('subject')}.\n\n${String(data.get('message')).trim()||'Je souhaite obtenir des renseignements sur votre école.'}\n\nMerci pour votre retour.`;document.querySelector('#preview-text').textContent=message;document.querySelector('#whatsapp-send').href='https://wa.me/33749587024?text='+encodeURIComponent(message);const preview=document.querySelector('#message-preview');preview.hidden=false;preview.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'nearest'})});
 form?.addEventListener('input',()=>{document.querySelector('#message-preview').hidden=true});
+const learningRoadmap=document.querySelector('.learning-roadmap');
+if(learningRoadmap){
+  let roadmapFrame=0;
+  const updateRoadmap=()=>{
+    roadmapFrame=0;
+    const rect=learningRoadmap.getBoundingClientRect();
+    const progress=Math.max(0,Math.min(1,(innerHeight*.62-rect.top)/rect.height));
+    learningRoadmap.style.setProperty('--roadmap-draw',`${Math.round(progress*100)}%`);
+  };
+  const scheduleRoadmap=()=>{if(!roadmapFrame)roadmapFrame=requestAnimationFrame(updateRoadmap)};
+  addEventListener('scroll',scheduleRoadmap,{passive:true});
+  addEventListener('resize',scheduleRoadmap);
+  updateRoadmap();
+}
